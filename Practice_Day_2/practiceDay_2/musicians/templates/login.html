@@ -1,6 +1,14 @@
 {% extends 'base.html'%}
 {% load crispy_forms_tags %}
-{% block body %} 
+{% block body %}
+
+{% if request.GET.next %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        You need to log in to access that page.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+
 
 <form method="post" style="width: 50%; margin: auto" novalidate>
       <h1>Login Page</h1>
