@@ -54,7 +54,7 @@
                 <div class="card-body">
                     <!-- Car Details -->
                     <h5 class="card-title">
-                        <a href="{% url 'car_details' car.id %}?source=home" class="text-dark">{{ car.title }}</a>
+                        <a href="{% url 'car_details' car.id %}?source=home" class="text-primary">{{ car.title }}</a>
                     </h5>
                     <p class="card-text">{{ car.description|truncatewords:20 }}</p>
                     <p><strong>Price:</strong> BDT {{ car.price }}</p>

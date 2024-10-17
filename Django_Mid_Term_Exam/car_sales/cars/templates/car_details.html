@@ -1,31 +1,43 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="container mt-4">
-    <div class="card">
-        <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.title }}" style="max-height: auto; object-fit: cover;">
-        <div class="card-body">
-            <h2 class="card-title">{{ car.title }}</h2>
-            <p class="card-text"><strong>Price:</strong> ${{ car.price }}</p>
-            <p class="card-text"><strong>Brand:</strong> {{ car.brand.name }}</p>
-            <p class="card-text"><strong>Quantity:</strong> {{ car.quantity }}</p>
-            <p class="card-text"><strong>Description:</strong></p>
-            <p>{{ car.description }}</p>
-            <br>
+  <div class="card">
+    <img
+      src="{{ car.image.url }}"
+      class="card-img-top"
+      alt="{{ car.title }}"
+      style="max-height: auto; object-fit: cover"
+    />
+    <div class="card-body">
+      <h2 class="card-title text-info">{{ car.title }}</h2>
+      <p class="card-text"><strong>Price:</strong> BDT {{ car.price }}</p>
+      <p class="card-text"><strong>Brand:</strong> {{ car.brand.name }}</p>
+      <p class="card-text"><strong>Quantity:</strong> {{ car.quantity }}</p>
+      <p class="card-text"><strong>Description:</strong></p>
+      <p>{{ car.description }}</p>
+      <br />
 
-            <!-- Show the appropriate button  -->
-            {% if request.GET.source == "profile" %}
-                <form method="POST" action="{% url 'buy_car' car.id %}">
-                    {% csrf_token %}
-                    <button class="btn btn-primary btn-lg" type="submit">Buy Again</button>
-                </form>
-            {% else %}
-                <form method="POST" action="{% url 'buy_car' car.id %}">
-                    {% csrf_token %}
-                    <button class="btn btn-success btn-lg" type="submit">Buy Now</button>
-                </form>
-            {% endif %}
-        </div>
+      <!-- Show the appropriate button  -->
+      {% if request.GET.source == "profile" %}
+      <form method="POST" action="{% url 'buy_car' car.id %}">
+        {% csrf_token %} {% if car.quantity > 0 %}
+        <button class="btn btn-primary btn-lg" type="submit">Buy Again</button>
+        {% else %}
+        <button class="btn btn-secondary" disabled>Out of Stock</button>
+        {% endif %}
+      </form>
+      {% else %} {% if request.user.is_authenticated %}
+      <form action="{% url 'buy_car' car.id %}" method="POST">
+        {% csrf_token %} {% if car.quantity > 0 %}
+        <button class="btn btn-success">Buy Now</button>
+        {% else %}
+        <button class="btn btn-secondary" disabled>Out of Stock</button>
+        {% endif %}
+      </form>
+      {% else %}
+      <p class="text-danger">Login to buy this car.</p>
+      {% endif %} 
+      {% endif %}
     </div>
+  </div>
 </div>
 {% endblock %}
