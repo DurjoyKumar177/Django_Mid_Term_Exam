@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Confirm Delete</h1>
+    <p>Are you sure you want to delete "{{ musician }}"?</p>
+    <form method="post" class="form-group">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-danger">Confirm Delete</button>
+        <a href="{% url 'musician_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

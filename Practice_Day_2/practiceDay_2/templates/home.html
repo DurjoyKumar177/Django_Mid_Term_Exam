@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Musician List{% endblock %}
+
+{% block body %}
+<h2>Musicians Directory</h2>
+
+{% if messages %}
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="d-flex justify-content-end mb-2">
+    <a href="{% url 'add_musician' %}" class="btn btn-success">Add Musician</a>
+    <a href="{% url 'add_album' %}" class="btn btn-primary ms-2">Add Album</a>
+</div>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Musician Name</th>
+            <th>Email</th>
+            <th>Rating</th>
+            <th>Instrument Type</th>
+            <th>Album Name</th>
+            <th>Release Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for musician in musicians %}
+        {% if musician.album_set.all %}
+        {% for album in musician.album_set.all %}
+        <tr>
+            <td>{{ musician.id }}</td>
+            <td><a href="{% url 'edit_musician' musician.id %}">{{ musician.first_name }} {{ musician.last_name }}</a></td>
+            <td>{{ musician.email }}</td>
+            <td>{{ album.rating }}</td>
+            <td>{{ musician.instrument_type }}</td>
+            <td>{{ album.album_name }}</td>
+            <td>{{ album.release_date|date:"d-M-Y" }}</td>
+            <td>
+                {% if user.is_authenticated %}
+                <a href="{% url 'edit_album' album.id %}" class="btn btn-sm btn-warning mt-2 mx-2">Edit</a>
+                
+                <form action="{% url 'delete_musician' musician.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger mt-2">Delete</button>
+                </form>
+                
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td>{{ musician.id }}</td>
+            <td><a href="{% url 'edit_musician' musician.id %}">{{ musician.first_name }} {{ musician.last_name }}</a></td>
+            <td>{{ musician.email }}</td>
+            <td>N/A</td>
+            <td>{{ musician.instrument_type }}</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>No albums available</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
